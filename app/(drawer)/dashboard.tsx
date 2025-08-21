@@ -8,7 +8,7 @@ import {
   RefreshControl,
   Alert
 } from 'react-native';
-import { router } from 'expo-router';
+
 import { useDashboardStore } from '../../store/dashboardStore';
 import { firebaseService } from '../../services/firebaseService';
 import { notificationService } from '../../services/notificationService';
@@ -38,29 +38,8 @@ export default function DashboardScreen() {
     setLastSyncTime
   } = useDashboardStore();
 
-  // Role-based dashboard rendering
-  if (userProfile?.role === 'admin' || userProfile?.role === 'super_admin') {
-    return <AdminDashboard />;
-  }
-
-  if (userProfile?.role === 'student') {
-    return <StudentDashboard />;
-  }
-
-  if (userProfile?.role === 'teacher') {
-    return <AdminDashboard />; // Teachers use admin dashboard for now
-  }
-
-  if (userProfile?.role === 'parent') {
-    return <StudentDashboard />; // Parents use student dashboard to view child's progress
-  }
-
   const [activeTab, setActiveTab] = useState<DashboardTab>('overview');
   const [refreshing, setRefreshing] = useState(false);
-
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
 
   const loadDashboardData = async () => {
     setLoading(true);
@@ -91,14 +70,34 @@ export default function DashboardScreen() {
       setAssignments(assignments);
       setExams(exams);
       setLastSyncTime(new Date().toISOString());
-
-    } catch (error) {
-      console.error('Failed to load dashboard data:', error);
-      setError('Failed to load dashboard data');
+    } catch (err) {
+      console.error('Failed to load dashboard data:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load dashboard data');
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadDashboardData();
+  }, []);
+
+  // Role-based dashboard rendering
+  if (userProfile?.role === 'admin' || userProfile?.role === 'super_admin') {
+    return <AdminDashboard />;
+  }
+
+  if (userProfile?.role === 'student') {
+    return <StudentDashboard />;
+  }
+
+  if (userProfile?.role === 'teacher') {
+    return <AdminDashboard />; // Teachers use admin dashboard for now
+  }
+
+  if (userProfile?.role === 'parent') {
+    return <StudentDashboard />; // Parents use student dashboard to view child's progress
+  }
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -211,8 +210,9 @@ export default function DashboardScreen() {
                        dashboardSummary?.studyConsistency === 'good' ? '#8BC34A' :
                        dashboardSummary?.studyConsistency === 'average' ? '#FF9800' : '#F44336' }
             ]}>
-              {dashboardSummary?.studyConsistency?.charAt(0).toUpperCase() + 
-               dashboardSummary?.studyConsistency?.slice(1) || 'Unknown'}
+              {dashboardSummary?.studyConsistency
+                ? dashboardSummary.studyConsistency.charAt(0).toUpperCase() + dashboardSummary.studyConsistency.slice(1)
+                : 'Unknown'}
             </Text>
           </View>
         </View>

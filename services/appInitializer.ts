@@ -3,6 +3,10 @@ import { learningService } from './learningService';
 import { offlineContentService } from './offlineContentService';
 import { syncService } from './syncService';
 import { notificationService, smartNudgeEngine } from './notificationService';
+import { careerToolsService } from './careerToolsService';
+import { communityService } from './communityService';
+import { integrationService } from './integrationService';
+import { guardianService } from './guardianService';
 
 class AppInitializer {
   private isInitialized: boolean = false;
@@ -38,6 +42,22 @@ class AppInitializer {
       // Initialize smart nudge engine
       console.log('Initializing smart nudge engine...');
       await smartNudgeEngine.initialize();
+
+      // Initialize career tools service
+      console.log('Initializing career tools service...');
+      await careerToolsService.initialize();
+
+      // Initialize community service
+      console.log('Initializing community service...');
+      await communityService.initialize();
+
+      // Initialize integration service
+      console.log('Initializing integration service...');
+      await integrationService.initialize();
+
+      // Initialize guardian service
+      console.log('Initializing guardian service...');
+      await guardianService.initialize();
 
       // Check if this is first run and download initial content
       await this.handleFirstRun();

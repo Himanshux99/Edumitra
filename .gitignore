@@ -10,7 +10,7 @@ web-build/
 expo-env.d.ts
 
 #readme files
-*.README.md
+*.md
 
 # Native
 .kotlin/

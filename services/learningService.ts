@@ -77,7 +77,7 @@ class LearningService {
     }
 
     // Add to sync queue
-    await this.addToSyncQueue('lesson', course.id, 'create', course);
+    await this.addToSyncQueue('course', course.id, 'create', course);
     
     // Update store
     const store = useLearningStore.getState();
@@ -90,12 +90,12 @@ class LearningService {
 
   // Lesson operations
   async getAllLessons(): Promise<Lesson[]> {
-    const rows = await databaseService.findMany('lessons', undefined, undefined, 'courseId, orderIndex ASC');
+    const rows = await databaseService.findMany('lessons', undefined, undefined, 'courseId, order ASC');
     return rows.map(this.mapLessonFromDb);
   }
 
   async getLessonsByCourse(courseId: string): Promise<Lesson[]> {
-    const rows = await databaseService.findMany('lessons', 'courseId = ?', [courseId], 'orderIndex ASC');
+    const rows = await databaseService.findMany('lessons', 'courseId = ?', [courseId], 'order ASC');
     return rows.map(this.mapLessonFromDb);
   }
 

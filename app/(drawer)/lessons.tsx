@@ -17,8 +17,6 @@ import { Lesson, Course } from '../../types/database';
 export default function LessonsScreen() {
   const {
     courses,
-    lessons,
-    lessonProgress,
     selectedCourse,
     isLoading,
     isOffline,
@@ -35,7 +33,7 @@ export default function LessonsScreen() {
       setSelectedCourseId(courses[0].id);
       selectCourse(courses[0]);
     }
-  }, [courses]);
+  }, [courses, selectedCourseId, selectCourse]);
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -45,6 +43,7 @@ export default function LessonsScreen() {
         await learningService.loadAllData();
       }
     } catch (error) {
+      console.error('Failed to refresh data:', error);
       Alert.alert('Error', 'Failed to refresh data');
     } finally {
       setRefreshing(false);

@@ -275,7 +275,7 @@ export default function NotificationsScreen() {
             <Text style={styles.emptyStateIcon}>📭</Text>
             <Text style={styles.emptyStateText}>No notifications yet</Text>
             <Text style={styles.emptyStateSubtext}>
-              You'll see your notifications here when they arrive
+              You&apos;ll see your notifications here when they arrive
             </Text>
           </View>
         )}

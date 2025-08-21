@@ -21,7 +21,6 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     if (isLoading) return; // Don't navigate while loading
 
     const inAuthGroup = segments[0] === 'auth';
-    const inDrawerGroup = segments[0] === '(drawer)';
 
     console.log('AuthGuard - isAuthenticated:', isAuthenticated, 'segments:', segments, 'inAuthGroup:', inAuthGroup);
 
