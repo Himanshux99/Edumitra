@@ -83,7 +83,7 @@ class AuthService {
       });
 
       // Create user profile in Firestore
-      const userProfile: UserProfile = {
+      const userProfile : UserProfile = {
         uid: user.uid,
         email: data.email,
         displayName: `${data.firstName} ${data.lastName}`,
@@ -94,12 +94,50 @@ class AuthService {
         isActive: true,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        
-        // Add role-specific data
-        ...(data.role === 'student' && { studentData: data.studentData }),
-        ...(data.role === 'admin' && { adminData: data.adminData }),
-        ...(data.role === 'teacher' && { teacherData: data.teacherData }),
-        ...(data.role === 'parent' && { parentData: data.parentData }),
+
+        // Add role-specific data only if complete
+        ...(data.role === 'student' && data.studentData && {
+          studentData: {
+            studentId: data.studentData.studentId || `STU${Date.now()}`,
+            grade: data.studentData.grade || '',
+            section: data.studentData.section || '',
+            rollNumber: data.studentData.rollNumber || '',
+            dateOfBirth: data.studentData.dateOfBirth || '',
+            parentEmail: data.studentData.parentEmail,
+            enrollmentDate: data.studentData.enrollmentDate || new Date().toISOString(),
+            subjects: data.studentData.subjects || [],
+            academicYear: data.studentData.academicYear || new Date().getFullYear().toString(),
+          }
+        }),
+        ...(data.role === 'admin' && data.adminData && {
+          adminData: {
+            employeeId: data.adminData.employeeId || `EMP${Date.now()}`,
+            department: data.adminData.department || '',
+            position: data.adminData.position || '',
+            permissions: data.adminData.permissions || [],
+            canManageUsers: data.adminData.canManageUsers || false,
+            canManageCourses: data.adminData.canManageCourses || false,
+            canViewReports: data.adminData.canViewReports || false,
+          }
+        }),
+        ...(data.role === 'teacher' && data.teacherData && {
+          teacherData: {
+            employeeId: data.teacherData.employeeId || `TCH${Date.now()}`,
+            department: data.teacherData.department || '',
+            subjects: data.teacherData.subjects || [],
+            classes: data.teacherData.classes || [],
+            qualifications: data.teacherData.qualifications || [],
+            experience: data.teacherData.experience || 0,
+          }
+        }),
+        ...(data.role === 'parent' && data.parentData && {
+          parentData: {
+            children: data.parentData.children || [],
+            relationship: data.parentData.relationship || 'guardian',
+            occupation: data.parentData.occupation,
+            emergencyContact: data.parentData.emergencyContact || '',
+          }
+        }),
       };
 
       // Save profile to Firestore
@@ -254,7 +292,7 @@ class AuthService {
         type,
         userId,
         timestamp: new Date().toISOString(),
-        metadata
+        ...(metadata && { metadata })
       };
 
       await setDoc(doc(collection(db, 'auth_events')), event);
