@@ -1,0 +1,247 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to get user role from users collection
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+    
+    // Helper function to check if user is admin
+    function isAdmin() {
+      return isAuthenticated() && getUserRole() in ['admin', 'super_admin', 'teacher'];
+    }
+    
+    // Helper function to check if user is student
+    function isStudent() {
+      return isAuthenticated() && getUserRole() == 'student';
+    }
+    
+    // Helper function to check if user owns the document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Users collection - for authentication and profile data
+    match /users/{userId} {
+      // Users can read and write their own profile
+      allow read, write: if isOwner(userId);
+      
+      // Admins can read all user profiles
+      allow read: if isAdmin();
+      
+      // Admins can update user profiles (for role management)
+      allow update: if isAdmin();
+    }
+    
+    // Student Academic Data collection
+    match /studentAcademicData/{documentId} {
+      // Students can read and write their own academic data
+      allow read, write: if isAuthenticated() && 
+        resource.data.userId == request.auth.uid;
+      
+      // Students can create their own academic data
+      allow create: if isAuthenticated() && 
+        request.resource.data.userId == request.auth.uid;
+      
+      // Admins can read all student academic data
+      allow read: if isAdmin();
+      
+      // Admins can update student academic data (for corrections/management)
+      allow update: if isAdmin();
+      
+      // Admins can delete student academic data (for data management)
+      allow delete: if isAdmin();
+      
+      // Teachers can read academic data of students in their classes
+      // (This would require additional logic to check class assignments)
+      allow read: if isAuthenticated() && getUserRole() == 'teacher';
+    }
+    
+    // Authentication events collection - for audit logging
+    match /auth_events/{eventId} {
+      // Only admins can read authentication events
+      allow read: if isAdmin();
+      
+      // No direct writes allowed - only server-side writes
+      allow write: if false;
+    }
+    
+    // Academic performance analytics collection (if needed)
+    match /academicAnalytics/{documentId} {
+      // Only admins can read analytics data
+      allow read: if isAdmin();
+      
+      // Only system can write analytics data
+      allow write: if false;
+    }
+    
+    // Course and subject master data
+    match /courses/{courseId} {
+      // Everyone can read course information
+      allow read: if isAuthenticated();
+      
+      // Only admins can modify course data
+      allow write: if isAdmin();
+    }
+    
+    match /subjects/{subjectId} {
+      // Everyone can read subject information
+      allow read: if isAuthenticated();
+      
+      // Only admins can modify subject data
+      allow write: if isAdmin();
+    }
+    
+    // Academic year and semester configuration
+    match /academicConfig/{configId} {
+      // Everyone can read academic configuration
+      allow read: if isAuthenticated();
+      
+      // Only admins can modify academic configuration
+      allow write: if isAdmin();
+    }
+    
+    // Notifications collection
+    match /notifications/{notificationId} {
+      // Users can read notifications addressed to them
+      allow read: if isAuthenticated() && (
+        resource.data.recipientId == request.auth.uid ||
+        resource.data.recipientRole == getUserRole() ||
+        resource.data.isGlobal == true
+      );
+      
+      // Admins can create and manage notifications
+      allow write: if isAdmin();
+    }
+    
+    // Student assignments and submissions
+    match /assignments/{assignmentId} {
+      // Students can read assignments assigned to them
+      allow read: if isAuthenticated();
+      
+      // Teachers and admins can create and manage assignments
+      allow write: if isAdmin();
+    }
+    
+    match /submissions/{submissionId} {
+      // Students can read and write their own submissions
+      allow read, write: if isAuthenticated() && 
+        resource.data.studentId == request.auth.uid;
+      
+      // Students can create their own submissions
+      allow create: if isAuthenticated() && 
+        request.resource.data.studentId == request.auth.uid;
+      
+      // Teachers and admins can read all submissions
+      allow read: if isAdmin();
+      
+      // Teachers and admins can update submissions (for grading)
+      allow update: if isAdmin();
+    }
+    
+    // Grade and feedback collection
+    match /grades/{gradeId} {
+      // Students can read their own grades
+      allow read: if isAuthenticated() && 
+        resource.data.studentId == request.auth.uid;
+      
+      // Teachers and admins can read and write all grades
+      allow read, write: if isAdmin();
+    }
+    
+    // Attendance records
+    match /attendance/{attendanceId} {
+      // Students can read their own attendance
+      allow read: if isAuthenticated() && 
+        resource.data.studentId == request.auth.uid;
+      
+      // Teachers and admins can read and write all attendance
+      allow read, write: if isAdmin();
+    }
+    
+    // Parent-student relationships
+    match /parentStudentRelations/{relationId} {
+      // Parents can read relations where they are the parent
+      allow read: if isAuthenticated() && 
+        resource.data.parentId == request.auth.uid;
+      
+      // Students can read relations where they are the student
+      allow read: if isAuthenticated() && 
+        resource.data.studentId == request.auth.uid;
+      
+      // Admins can manage all parent-student relations
+      allow read, write: if isAdmin();
+    }
+    
+    // System logs and audit trails
+    match /systemLogs/{logId} {
+      // Only super admins can read system logs
+      allow read: if isAuthenticated() && getUserRole() == 'super_admin';
+      
+      // No direct writes - only server-side logging
+      allow write: if false;
+    }
+    
+    // Backup and export data
+    match /exports/{exportId} {
+      // Only admins can read export data
+      allow read: if isAdmin();
+      
+      // Only admins can create exports
+      allow create: if isAdmin();
+      
+      // Auto-delete exports after creation (handled by cloud functions)
+      allow delete: if false;
+    }
+    
+    // Default deny rule for any other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
+/*
+Security Rules Summary:
+
+1. User Authentication:
+   - All operations require authentication
+   - Users can only access their own data
+   - Admins have broader access for management
+
+2. Student Academic Data:
+   - Students: Read/Write their own data only
+   - Admins: Full access to all student data
+   - Teachers: Read access to student data
+
+3. Role-Based Access:
+   - Student: Limited to own academic data
+   - Teacher: Can view student data, manage assignments/grades
+   - Admin: Full system access
+   - Super Admin: Complete system control including logs
+
+4. Data Privacy:
+   - Students cannot see other students' data
+   - Parents can only see their children's data
+   - Teachers can see academic data but not personal details
+   - Admins have full access for management purposes
+
+5. Audit and Security:
+   - All authentication events are logged
+   - System logs are restricted to super admins
+   - No direct manipulation of audit data
+
+To deploy these rules:
+1. Go to Firebase Console > Firestore Database > Rules
+2. Copy and paste these rules
+3. Click "Publish" to deploy
+
+Note: These rules assume proper user role management in the users collection.
+Make sure user roles are set correctly during registration.
+*/

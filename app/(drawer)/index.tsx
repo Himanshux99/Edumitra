@@ -1,9 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { useLearningStore } from '../../store/learningStore';
 import { syncService } from '../../services/syncService';
+import { useAuth } from '../../contexts/AuthContext';
+import { router } from 'expo-router';
+import { auth } from '../../config/firebase';
 
 export default function HomeScreen() {
+  const { signOut } = useAuth();
   const {
     courses,
     lessons,
@@ -30,6 +34,41 @@ export default function HomeScreen() {
     }
   };
 
+  const handleTestLogout = async () => {
+    Alert.alert(
+      'Test Logout',
+      'This is a test logout button. Do you want to sign out?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Sign Out',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              console.log('HomeScreen - Starting test logout...');
+              console.log('HomeScreen - Firebase auth user before logout:', auth.currentUser?.email);
+
+              await signOut();
+
+              console.log('HomeScreen - SignOut completed');
+              console.log('HomeScreen - Firebase auth user after logout:', auth.currentUser?.email);
+
+              // Force navigation as backup
+              setTimeout(() => {
+                console.log('HomeScreen - Forcing navigation to signin...');
+                router.replace('/auth/signin');
+              }, 500);
+
+            } catch (error) {
+              console.error('HomeScreen - Logout error:', error);
+              Alert.alert('Error', 'Failed to sign out');
+            }
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
@@ -48,6 +87,22 @@ export default function HomeScreen() {
             </TouchableOpacity>
           )}
         </View>
+
+        {/* Test Logout Button */}
+        <TouchableOpacity
+          style={{
+            backgroundColor: '#ff4444',
+            padding: 10,
+            borderRadius: 8,
+            marginTop: 10,
+            alignItems: 'center'
+          }}
+          onPress={handleTestLogout}
+        >
+          <Text style={{ color: 'white', fontWeight: 'bold' }}>
+            🧪 Test Logout
+          </Text>
+        </TouchableOpacity>
       </View>
 
       {/* Progress Overview */}
@@ -97,7 +152,7 @@ export default function HomeScreen() {
       {/* Today's Schedule */}
       {todaysSchedule.length > 0 && (
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>📅 Today's Schedule</Text>
+          <Text style={styles.cardTitle}>📅 Todays Schedule</Text>
           {todaysSchedule.slice(0, 3).map((event) => (
             <View key={event.id} style={styles.scheduleItem}>
               <Text style={styles.scheduleTime}>
