@@ -7,13 +7,13 @@ import { Platform } from 'react-native';
 // Firebase configuration
 // Note: In production, these should be environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyC0bSzkui5vPF3bCvwnuJ3FUXHNqtRMRdE",
-  authDomain: "edumitra-bee5e.firebaseapp.com",
-  projectId: "edumitra-bee5e",
-  storageBucket: "edumitra-bee5e.firebasestorage.app",
-  messagingSenderId: "325912326405",
-  appId: "1:325912326405:web:d64a3b3cd86016a4a6876c",
-  measurementId: "G-SP34DSXK50"
+  apiKey: "AIzaSyAWv2_tcIEl8IcXRfGpyL_cQI4Hn3p9ekI",
+  authDomain: "edumitra-709bd.firebaseapp.com",
+  projectId: "edumitra-709bd",
+  storageBucket: "edumitra-709bd.firebasestorage.app",
+  messagingSenderId: "76925715514",
+  appId: "1:76925715514:web:7f42989672d1cb037f6103",
+  measurementId: "G-GX7RGHVGPN"
 };
 
 // Initialize Firebase
