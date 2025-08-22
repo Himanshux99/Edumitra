@@ -1,10 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import { useLearningStore } from '../../store/learningStore';
-import { syncService } from '../../services/syncService';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
-import { router } from 'expo-router';
-import { auth } from '../../config/firebase';
+import { syncService } from '../../services/syncService';
+import { useLearningStore } from '../../store/learningStore';
 
 export default function HomeScreen() {
   const { signOut } = useAuth();
@@ -34,41 +32,6 @@ export default function HomeScreen() {
     }
   };
 
-  const handleTestLogout = async () => {
-    Alert.alert(
-      'Test Logout',
-      'This is a test logout button. Do you want to sign out?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Sign Out',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              console.log('HomeScreen - Starting test logout...');
-              console.log('HomeScreen - Firebase auth user before logout:', auth.currentUser?.email);
-
-              await signOut();
-
-              console.log('HomeScreen - SignOut completed');
-              console.log('HomeScreen - Firebase auth user after logout:', auth.currentUser?.email);
-
-              // Force navigation as backup
-              setTimeout(() => {
-                console.log('HomeScreen - Forcing navigation to signin...');
-                router.replace('/auth/signin');
-              }, 500);
-
-            } catch (error) {
-              console.error('HomeScreen - Logout error:', error);
-              Alert.alert('Error', 'Failed to sign out');
-            }
-          },
-        },
-      ]
-    );
-  };
-
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
@@ -88,21 +51,7 @@ export default function HomeScreen() {
           )}
         </View>
 
-        {/* Test Logout Button */}
-        <TouchableOpacity
-          style={{
-            backgroundColor: '#ff4444',
-            padding: 10,
-            borderRadius: 8,
-            marginTop: 10,
-            alignItems: 'center'
-          }}
-          onPress={handleTestLogout}
-        >
-          <Text style={{ color: 'white', fontWeight: 'bold' }}>
-            🧪 Test Logout
-          </Text>
-        </TouchableOpacity>
+
       </View>
 
       {/* Progress Overview */}
@@ -206,23 +155,36 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f8f9fa',
   },
   header: {
-    backgroundColor: '#007AFF',
-    padding: 20,
-    paddingTop: 50,
+    backgroundColor: '#667eea',
+    padding: 24,
+    paddingTop: 60,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+    shadowColor: '#667eea',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 8,
   },
   welcomeText: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 28,
+    fontWeight: '800',
     color: 'white',
-    marginBottom: 5,
+    marginBottom: 8,
+    letterSpacing: 0.5,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   subtitleText: {
-    fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.8)',
-    marginBottom: 15,
+    fontSize: 17,
+    color: 'rgba(255, 255, 255, 0.9)',
+    marginBottom: 20,
+    fontWeight: '500',
+    letterSpacing: 0.3,
   },
   statusBadge: {
     flexDirection: 'row',
@@ -258,20 +220,23 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: 'white',
-    margin: 15,
-    padding: 15,
-    borderRadius: 10,
+    margin: 16,
+    padding: 20,
+    borderRadius: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 6,
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
   },
   cardTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    color: '#333',
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 18,
+    color: '#2c3e50',
+    letterSpacing: 0.3,
   },
   progressContainer: {
     marginBottom: 15,
@@ -312,35 +277,41 @@ const styles = StyleSheet.create({
   quickStatsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 15,
-    marginBottom: 10,
+    paddingHorizontal: 16,
+    marginBottom: 16,
+    gap: 12,
   },
   quickStatCard: {
     backgroundColor: 'white',
     flex: 1,
-    marginHorizontal: 5,
-    padding: 15,
-    borderRadius: 10,
+    padding: 20,
+    borderRadius: 16,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
   },
   quickStatIcon: {
-    fontSize: 24,
-    marginBottom: 8,
+    fontSize: 28,
+    marginBottom: 12,
   },
   quickStatNumber: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 4,
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#667eea',
+    marginBottom: 6,
+    letterSpacing: 0.5,
   },
   quickStatLabel: {
-    fontSize: 12,
-    color: '#666',
+    fontSize: 13,
+    color: '#6c757d',
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   scheduleItem: {
     flexDirection: 'row',
