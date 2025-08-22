@@ -63,6 +63,13 @@ export default function DrawerLayout() {
         }}
       />
       <Drawer.Screen
+        name="career-hub"
+        options={{
+          title: 'Career Hub',
+          headerTitle: 'Personalized Career Roadmaps',
+        }}
+      />
+      <Drawer.Screen
         name="academic-data"
         options={{
           title: 'Academic Data',

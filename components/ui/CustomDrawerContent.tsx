@@ -26,9 +26,10 @@ interface DrawerItem {
 const drawerItems: DrawerItem[] = [
   { name: 'index', label: 'Home', icon: 'house.fill', route: '/(drawer)/' },
   { name: 'dashboard', label: 'Dashboard', icon: 'chart.bar', route: '/(drawer)/dashboard' },
+  { name: 'career-hub', label: 'Career Hub', icon: 'briefcase.fill', route: '/(drawer)/career-hub' },
   { name: 'academic-data', label: 'Academic Data', icon: 'doc.text.below.ecg', route: '/(drawer)/academic-data' },
   { name: 'content', label: 'Content Hub', icon: 'folder.fill', route: '/(drawer)/content' },
-  { name: 'career-tools', label: 'Career Tools', icon: 'briefcase.fill', route: '/(drawer)/career-tools' },
+  { name: 'career-tools', label: 'Career Tools', icon: 'briefcase', route: '/(drawer)/career-tools' },
   { name: 'community', label: 'Community', icon: 'people.fill', route: '/(drawer)/community' },
   { name: 'integrations', label: 'Integrations', icon: 'link', route: '/(drawer)/integrations' },
   { name: 'guardian', label: 'Guardian View', icon: 'family.restroom', route: '/(drawer)/guardian' },
