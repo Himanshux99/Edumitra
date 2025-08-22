@@ -1,11 +1,11 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import ResumeDashboard from '../../../components/resume/ResumeDashboard';
+import { View, StyleSheet } from 'react-native';
+import ResumeBuilder from '../../components/resume/ResumeBuilder';
 
 export default function ResumeBuilderScreen() {
   return (
     <View style={styles.container}>
-      <ResumeDashboard />
+      <ResumeBuilder />
     </View>
   );
 }
