@@ -1,8 +1,8 @@
-import React from 'react';
-import { Drawer } from 'expo-router/drawer';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { Colors } from '@/constants/Colors';
 import CustomDrawerContent from '@/components/ui/CustomDrawerContent';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { Drawer } from 'expo-router/drawer';
+import React from 'react';
 
 export default function DrawerLayout() {
   const colorScheme = useColorScheme();
@@ -16,29 +16,36 @@ export default function DrawerLayout() {
         drawerType: 'slide',
         drawerPosition: 'left',
         drawerStyle: {
-          width: 280,
-          backgroundColor: colorScheme === 'dark' ? '#1a1a1a' : '#ffffff',
+          width: 320,
+          backgroundColor: colorScheme === 'dark' ? '#0f0f0f' : '#ffffff',
+          shadowColor: '#000',
+          shadowOffset: { width: 2, height: 0 },
+          shadowOpacity: 0.25,
+          shadowRadius: 8,
+          elevation: 16,
         },
-        overlayColor: 'rgba(0, 0, 0, 0.5)',
+        overlayColor: 'rgba(0, 0, 0, 0.6)',
         sceneContainerStyle: {
-          backgroundColor: colorScheme === 'dark' ? '#000000' : '#f5f5f5',
+          backgroundColor: colorScheme === 'dark' ? '#000000' : '#f8f9fa',
         },
         headerStyle: {
-          backgroundColor: colors.tint,
-          elevation: 4,
-          shadowOpacity: 0.1,
-          shadowRadius: 4,
-          shadowOffset: { width: 0, height: 2 },
+          backgroundColor: '#667eea',
+          elevation: 8,
+          shadowOpacity: 0.3,
+          shadowRadius: 8,
+          shadowOffset: { width: 0, height: 4 },
+          borderBottomWidth: 0,
         },
         headerTintColor: '#ffffff',
         headerTitleStyle: {
-          fontWeight: 'bold',
-          fontSize: 18,
+          fontWeight: '700',
+          fontSize: 19,
+          letterSpacing: 0.5,
         },
         headerTitleAlign: 'center',
         gestureEnabled: true,
         swipeEnabled: true,
-        swipeEdgeWidth: 50,
+        swipeEdgeWidth: 80,
       }}
     >
       <Drawer.Screen

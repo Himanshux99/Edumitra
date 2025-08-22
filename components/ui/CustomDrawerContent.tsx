@@ -1,20 +1,20 @@
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { DrawerContentComponentProps } from '@react-navigation/drawer';
+import { router } from 'expo-router';
 import React from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  SafeAreaView,
-  Platform,
-  Alert,
+    Alert,
+    Platform,
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from 'react-native';
-import { DrawerContentScrollView, DrawerContentComponentProps } from '@react-navigation/drawer';
-import { router } from 'expo-router';
-import { IconSymbol } from './IconSymbol';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { Colors } from '@/constants/Colors';
 import { useAuth } from '../../contexts/AuthContext';
+import { IconSymbol } from './IconSymbol';
 
 interface DrawerItem {
   name: string;
@@ -79,116 +79,190 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colorScheme === 'dark' ? '#1a1a1a' : '#ffffff',
+      backgroundColor: colorScheme === 'dark' ? '#0f0f0f' : '#ffffff',
     },
     header: {
-      padding: 20,
-      paddingTop: Platform.OS === 'ios' ? 60 : 40,
-      backgroundColor: colors.tint,
-      borderBottomWidth: 1,
-      borderBottomColor: colorScheme === 'dark' ? '#333' : '#e0e0e0',
+      padding: 24,
+      paddingTop: Platform.OS === 'ios' ? 70 : 50,
+      backgroundColor: '#667eea',
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+      shadowColor: '#667eea',
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.4,
+      shadowRadius: 12,
+      elevation: 12,
+      position: 'relative',
     },
     headerTitle: {
-      fontSize: 24,
-      fontWeight: 'bold',
+      fontSize: 28,
+      fontWeight: '800',
       color: '#ffffff',
-      marginBottom: 4,
+      marginBottom: 6,
+      letterSpacing: 0.5,
+      textShadowColor: 'rgba(0, 0, 0, 0.3)',
+      textShadowOffset: { width: 0, height: 1 },
+      textShadowRadius: 2,
     },
     headerSubtitle: {
-      fontSize: 14,
+      fontSize: 15,
       color: '#ffffff',
-      opacity: 0.8,
+      opacity: 0.9,
+      fontWeight: '500',
+      letterSpacing: 0.3,
     },
     scrollContent: {
       flex: 1,
-      paddingTop: 20,
+      paddingTop: 24,
+      paddingBottom: 16,
     },
     drawerItem: {
       flexDirection: 'row',
       alignItems: 'center',
       paddingHorizontal: 20,
-      paddingVertical: 15,
-      marginHorizontal: 10,
-      marginVertical: 2,
-      borderRadius: 12,
+      paddingVertical: 16,
+      marginHorizontal: 12,
+      marginVertical: 4,
+      borderRadius: 16,
       backgroundColor: 'transparent',
+      borderWidth: 1,
+      borderColor: 'transparent',
+      shadowColor: colorScheme === 'dark' ? '#000' : '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.05,
+      shadowRadius: 2,
+      elevation: 1,
     },
     activeDrawerItem: {
-      backgroundColor: colors.tint + '15',
-      borderLeftWidth: 4,
-      borderLeftColor: colors.tint,
+      backgroundColor: colorScheme === 'dark' ? '#667eea20' : '#667eea15',
+      borderLeftWidth: 5,
+      borderLeftColor: '#667eea',
+      borderColor: '#667eea30',
+      shadowOpacity: 0.15,
+      shadowRadius: 4,
+      elevation: 3,
+      transform: [{ scale: 1.02 }],
     },
     drawerItemIcon: {
-      marginRight: 15,
-      width: 24,
+      marginRight: 16,
+      width: 28,
+      height: 28,
       alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 8,
+      backgroundColor: colorScheme === 'dark' ? '#ffffff10' : '#f8f9fa',
     },
     drawerItemLabel: {
       fontSize: 16,
-      fontWeight: '500',
-      color: colorScheme === 'dark' ? '#ffffff' : '#333333',
+      fontWeight: '600',
+      color: colorScheme === 'dark' ? '#ffffff' : '#2c3e50',
       flex: 1,
+      letterSpacing: 0.2,
     },
     activeDrawerItemLabel: {
-      color: colors.tint,
-      fontWeight: '600',
+      color: '#667eea',
+      fontWeight: '700',
+    },
+    activeDrawerItemIcon: {
+      backgroundColor: '#667eea',
+      shadowColor: '#667eea',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    activeIndicator: {
+      width: 4,
+      height: 4,
+      borderRadius: 2,
+      backgroundColor: '#667eea',
+      marginLeft: 8,
     },
     footer: {
       padding: 20,
+      paddingBottom: 30,
       borderTopWidth: 1,
-      borderTopColor: colorScheme === 'dark' ? '#333' : '#e0e0e0',
+      borderTopColor: colorScheme === 'dark' ? '#333333' : '#e8ecf0',
+      backgroundColor: colorScheme === 'dark' ? '#1a1a1a' : '#f8f9fa',
     },
     footerText: {
-      fontSize: 12,
-      color: colorScheme === 'dark' ? '#888' : '#666',
+      fontSize: 11,
+      color: colorScheme === 'dark' ? '#999999' : '#6c757d',
       textAlign: 'center',
+      lineHeight: 16,
+      fontWeight: '500',
     },
     divider: {
       height: 1,
-      backgroundColor: colorScheme === 'dark' ? '#333' : '#e0e0e0',
-      marginVertical: 10,
+      backgroundColor: colorScheme === 'dark' ? '#333333' : '#e8ecf0',
+      marginVertical: 16,
       marginHorizontal: 20,
+      opacity: 0.6,
     },
     logoutButton: {
       flexDirection: 'row',
       alignItems: 'center',
       paddingHorizontal: 20,
-      paddingVertical: 15,
-      marginHorizontal: 10,
-      marginVertical: 5,
-      borderRadius: 12,
-      backgroundColor: '#ff444415',
-      borderWidth: 1,
+      paddingVertical: 16,
+      marginHorizontal: 12,
+      marginVertical: 8,
+      borderRadius: 16,
+      backgroundColor: '#ff444418',
+      borderWidth: 1.5,
       borderColor: '#ff4444',
+      shadowColor: '#ff4444',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
+      elevation: 3,
     },
     logoutIcon: {
-      marginRight: 15,
-      width: 24,
+      marginRight: 16,
+      width: 28,
+      height: 28,
       alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 8,
+      backgroundColor: '#ff444420',
     },
     logoutLabel: {
       fontSize: 16,
-      fontWeight: '500',
+      fontWeight: '700',
       color: '#ff4444',
       flex: 1,
+      letterSpacing: 0.2,
     },
     userInfo: {
-      padding: 15,
-      marginHorizontal: 10,
-      marginBottom: 10,
-      backgroundColor: colorScheme === 'dark' ? '#2a2a2a' : '#f5f5f5',
-      borderRadius: 12,
+      padding: 18,
+      marginHorizontal: 12,
+      marginBottom: 12,
+      backgroundColor: colorScheme === 'dark' ? '#2a2a2a' : '#f8f9fa',
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: colorScheme === 'dark' ? '#333333' : '#e8ecf0',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 2,
     },
     userName: {
-      fontSize: 16,
-      fontWeight: '600',
-      color: colorScheme === 'dark' ? '#ffffff' : '#333333',
-      marginBottom: 4,
+      fontSize: 17,
+      fontWeight: '700',
+      color: colorScheme === 'dark' ? '#ffffff' : '#2c3e50',
+      marginBottom: 6,
+      letterSpacing: 0.3,
     },
     userRole: {
-      fontSize: 12,
-      color: colorScheme === 'dark' ? '#cccccc' : '#666666',
+      fontSize: 13,
+      color: colorScheme === 'dark' ? '#cccccc' : '#6c757d',
       textTransform: 'capitalize',
+      fontWeight: '600',
+      backgroundColor: colorScheme === 'dark' ? '#667eea20' : '#667eea15',
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      borderRadius: 8,
+      alignSelf: 'flex-start',
     },
   });
 
@@ -218,13 +292,16 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
                 isActive && styles.activeDrawerItem,
               ]}
               onPress={() => handleItemPress(item.route)}
-              activeOpacity={0.7}
+              activeOpacity={0.8}
             >
-              <View style={styles.drawerItemIcon}>
+              <View style={[
+                styles.drawerItemIcon,
+                isActive && styles.activeDrawerItemIcon
+              ]}>
                 <IconSymbol
-                  size={24}
+                  size={22}
                   name={item.icon as any}
-                  color={isActive ? colors.tint : (colorScheme === 'dark' ? '#ffffff' : '#666666')}
+                  color={isActive ? '#ffffff' : (colorScheme === 'dark' ? '#cccccc' : '#667eea')}
                 />
               </View>
               <Text
@@ -235,6 +312,7 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
               >
                 {item.label}
               </Text>
+              {isActive && <View style={styles.activeIndicator} />}
             </TouchableOpacity>
           );
         })}
